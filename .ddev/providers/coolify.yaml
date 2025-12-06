@@ -1,0 +1,62 @@
+#
+# DDEV Provider: Coolify Production
+# ==================================
+# Synchronisiert Datenbank und Fileadmin von Production zu DDEV
+#
+# Verwendung:
+#   ddev pull coolify
+#
+# Voraussetzungen:
+#   1. SSH-Zugang zum Coolify-Server konfigurieren
+#   2. Environment-Variablen in .ddev/.env.coolify setzen:
+#      - COOLIFY_SSH_HOST=dein-server.de
+#      - COOLIFY_SSH_USER=root
+#      - COOLIFY_SSH_PORT=22
+#      - COOLIFY_CONTAINER_NAME=lk8s4cooc4skw4o8k044gokw
+#      - COOLIFY_DB_CONTAINER=tg0wgc480k0gss84o84g8wcg
+#
+
+environment_variables:
+  COOLIFY_SSH_HOST: ""
+  COOLIFY_SSH_USER: "root"
+  COOLIFY_SSH_PORT: "22"
+  COOLIFY_CONTAINER_NAME: ""
+  COOLIFY_DB_CONTAINER: ""
+  COOLIFY_DB_NAME: "default"
+  COOLIFY_DB_USER: "mariadb"
+  COOLIFY_DB_PASSWORD: ""
+
+auth_command:
+  command: |
+    set -eu -o pipefail
+    if [ -z "${COOLIFY_SSH_HOST:-}" ]; then
+      echo "❌ COOLIFY_SSH_HOST nicht gesetzt!"
+      echo "Erstelle .ddev/.env.coolify mit den Zugangsdaten."
+      exit 1
+    fi
+    ssh -p ${COOLIFY_SSH_PORT} ${COOLIFY_SSH_USER}@${COOLIFY_SSH_HOST} "echo '✅ SSH-Verbindung erfolgreich'"
+
+db_pull_command:
+  command: |
+    set -eu -o pipefail
+    echo "📦 Exportiere Datenbank von Production..."
+    
+    # Dump auf dem Server erstellen
+    ssh -p ${COOLIFY_SSH_PORT} ${COOLIFY_SSH_USER}@${COOLIFY_SSH_HOST} \
+      "docker exec ${COOLIFY_DB_CONTAINER} mysqldump -u ${COOLIFY_DB_USER} -p'${COOLIFY_DB_PASSWORD}' ${COOLIFY_DB_NAME}" \
+      > /var/www/html/.ddev/.downloads/db.sql
+    
+    echo "✅ Datenbank-Dump erstellt: .ddev/.downloads/db.sql"
+
+files_pull_command:
+  command: |
+    set -eu -o pipefail
+    echo "📁 Synchronisiere fileadmin von Production..."
+    
+    # Fileadmin vom Server holen
+    rsync -avz --delete \
+      -e "ssh -p ${COOLIFY_SSH_PORT}" \
+      ${COOLIFY_SSH_USER}@${COOLIFY_SSH_HOST}:/var/lib/docker/volumes/*${COOLIFY_CONTAINER_NAME}*/_data/public/fileadmin/ \
+      /var/www/html/public/fileadmin/
+    
+    echo "✅ Fileadmin synchronisiert"

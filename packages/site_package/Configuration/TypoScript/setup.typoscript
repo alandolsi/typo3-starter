@@ -1,0 +1,40 @@
+# ==============================================
+# TYPO3 Cloud Starter - Frontend TypoScript Setup
+# ==============================================
+# Dieses Setup konfiguriert eine einfache Startseite mit
+# dem TYPO3 Cloud Starter Logo und dynamischem Content.
+
+page = PAGE
+page {
+    # Meta-Informationen
+    meta {
+        viewport = width=device-width, initial-scale=1
+        robots = index,follow
+        author = TYPO3 Cloud Starter
+        description = Eine moderne TYPO3 v13 Installation mit Cloud-Ready Architektur
+    }
+
+    # Haupt-Content: Willkommensseite mit Logo
+    10 = FLUIDTEMPLATE
+    10 {
+        file = EXT:site_package/Resources/Private/Templates/Default.html
+        variables {
+            logo = TEXT
+            logo.value = {$site.logo}
+            siteName = TEXT
+            siteName.value = {$site.name}
+            primaryColor = TEXT
+            primaryColor.value = {$site.primaryColor}
+        }
+    }
+
+    # Dynamischer Content aus tt_content (colPos 0)
+    100 = CONTENT
+    100 {
+        table = tt_content
+        select {
+            orderBy = sorting
+            where = {#colPos}=0
+        }
+    }
+}

@@ -1,0 +1,15 @@
+# ==============================================
+# TYPO3 Cloud Starter - TypoScript Constants
+# ==============================================
+
+# Logo-Pfad (kann im Constant Editor geändert werden)
+site {
+    # cat=site/logo; type=string; label=Logo Pfad: Pfad zum Logo (relativ zu EXT:site_package)
+    logo = EXT:site_package/Resources/Public/Images/TYPO3_Cloud_Starter.svg
+}
+
+# Seitenname
+site.name = TYPO3 Cloud Starter
+
+# Primärfarbe (TYPO3 Orange)
+site.primaryColor = #ff8700

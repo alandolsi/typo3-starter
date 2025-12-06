@@ -1,0 +1,26 @@
+.DS_Store
+.idea
+nbproject
+
+# TYPO3 var directory (cache, logs, sessions)
+/var/*
+!/var/labels
+
+# Composer vendor
+/vendor
+
+# User uploads and temp files
+/public/fileadmin/*
+!/public/fileadmin/.htaccess
+/public/typo3temp/*
+
+# Keep essential public files
+!/public/.htaccess
+!/public/index.php
+
+# Environment files (secrets)
+.env
+!.env.example
+
+# Private Copilot instructions
+.github/copilot-instructions.md

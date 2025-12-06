@@ -1,0 +1,18 @@
+base: 'https://starter.landolsi.de/'
+baseVariants:
+  -
+    base: 'https://starter.landolsi.local/'
+    condition: 'applicationContext == "Development"'
+errorHandling: {  }
+languages:
+  -
+    title: Deutsch
+    enabled: true
+    languageId: 0
+    base: /
+    locale: de_DE.UTF-8
+    navigationTitle: Deutsch
+    flag: de
+    typo3Language: de
+rootPageId: 1
+routes: {  }

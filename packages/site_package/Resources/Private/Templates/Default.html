@@ -1,0 +1,134 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+    }
+    .welcome-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 20px;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .welcome-content {
+        max-width: 700px;
+        text-align: center;
+    }
+    .logo-wrapper {
+        width: 250px;
+        margin: 0 auto 20px;
+    }
+    .logo-wrapper img {
+        width: 100%;
+        height: auto;
+    }
+    h1 {
+        color: #333;
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+    }
+    .intro {
+        color: #666;
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 20px;
+    }
+    .intro a {
+        color: #ff8700;
+    }
+    .features {
+        padding: 15px;
+        background: #f5f5f5;
+        border-radius: 8px;
+        text-align: left;
+        margin-bottom: 20px;
+    }
+    .features h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 1rem;
+    }
+    .features ul {
+        color: #666;
+        margin: 0;
+        padding-left: 20px;
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+    .developer {
+        padding: 15px;
+        background: linear-gradient(135deg, #ff8700 0%, #ff5500 100%);
+        border-radius: 8px;
+        color: white;
+        margin-bottom: 15px;
+    }
+    .developer h3 {
+        margin: 0 0 5px 0;
+        color: white;
+        font-size: 1rem;
+    }
+    .developer a {
+        color: white;
+        text-decoration: none;
+    }
+    .developer span {
+        font-size: 0.85rem;
+        opacity: 0.9;
+    }
+    .footer {
+        color: #999;
+        font-size: 0.8rem;
+    }
+    .footer a {
+        color: #ff8700;
+    }
+</style>
+
+<div class="welcome-container">
+    <div class="welcome-content">
+        <div class="logo-wrapper">
+            <f:image src="{logo}" alt="{siteName}" />
+        </div>
+        <h1>{siteName}</h1>
+        <p class="intro">
+            Willkommen bei deiner neuen <strong>TYPO3 v13</strong> Installation!<br/>
+            Erstellt mit dem <a href="https://github.com/alandolsi/landolsi-starter">TYPO3 Cloud Starter</a> Boilerplate.
+        </p>
+        <div class="features">
+            <h3>✨ Features</h3>
+            <ul>
+                <li>Docker-basiertes Deployment via Coolify</li>
+                <li>Automatische Umgebungserkennung (DDEV/Production)</li>
+                <li>12-Factor App Architektur</li>
+                <li>CI/CD Pipeline mit GitHub Actions</li>
+            </ul>
+            <p style="margin-top: 15px; margin-bottom: 0;">
+                <a href="https://github.com/alandolsi/landolsi-starter" style="display: inline-flex; align-items: center; gap: 8px; color: #333; text-decoration: none; font-weight: bold;">
+                    <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                    Projekt auf GitHub
+                </a>
+            </p>
+        </div>
+        <div class="developer">
+            <h3>🚀 Entwickelt von</h3>
+            <p style="margin: 0;">
+                <strong><a href="https://www.landolsi.de">Landolsi Webdesign</a></strong><br/>
+                <span>TYPO3 Entwicklung • Cloud Hosting • Webdesign</span>
+            </p>
+        </div>
+        <p class="footer">
+            Powered by <a href="https://typo3.org">TYPO3</a> &bull; 
+            <a href="/typo3">Backend Login</a> &bull;
+            © 2025 <a href="https://www.landolsi.de">Landolsi Webdesign</a>
+        </p>
+    </div>
+</div>
+
+</html>
