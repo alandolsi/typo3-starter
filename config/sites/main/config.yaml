@@ -1,7 +1,7 @@
-base: 'https://starter.landolsi.de/'
+base: 'https://typo3-starter.landolsi.de/'
 baseVariants:
   -
-    base: 'https://starter.landolsi.local/'
+    base: 'https://typo3-starter.landolsi.local/'
     condition: 'applicationContext == "Development"'
 errorHandling: {  }
 languages:
