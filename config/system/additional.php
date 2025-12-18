@@ -71,7 +71,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['systemLocale'] = 'de_DE.UTF-8';
 if ($isDdev) {
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['trustedHostsPattern'] = '.*';
 } else {
-    $GLOBALS['TYPO3_CONF_VARS']['SYS']['trustedHostsPattern'] = 'starter\.landolsi\.de';
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['trustedHostsPattern'] = 'typo3-starter\.landolsi\.de';
 }
 
 // ------------------------------
