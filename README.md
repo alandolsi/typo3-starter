@@ -1,7 +1,7 @@
 # TYPO3 Cloud Starter
 
-[![CI](https://github.com/alandolsi/landolsi-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/alandolsi/landolsi-starter/actions/workflows/ci.yml)
-[![Release](https://github.com/alandolsi/landolsi-starter/actions/workflows/release.yml/badge.svg)](https://github.com/alandolsi/landolsi-starter/actions/workflows/release.yml)
+[![CI](https://github.com/alandolsi/landolsi-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/alandolsi/typo3-starter/actions/workflows/ci.yml)
+[![Release](https://github.com/alandolsi/landolsi-starter/actions/workflows/release.yml/badge.svg)](https://github.com/alandolsi/typo3-starter/actions/workflows/release.yml)
 
 Ein "Cloud-Ready" TYPO3 v13 Boilerplate für Deployment via Coolify.
 
@@ -38,8 +38,8 @@ Ein "Cloud-Ready" TYPO3 v13 Boilerplate für Deployment via Coolify.
 
 ```bash
 # Projekt klonen
-git clone https://github.com/alandolsi/landolsi-starter.git
-cd landolsi-starter
+git clone https://github.com/alandolsi/typo3-starter.git
+cd typo3-starter
 
 # Projekt starten
 ddev start
@@ -94,13 +94,13 @@ Bei jedem Release (Git Tag) wird ein Docker Image in GHCR gespeichert:
 
 ```bash
 # Image für Rollback verwenden
-docker pull ghcr.io/alandolsi/landolsi-starter:v1.0.0
+docker pull ghcr.io/alandolsi/typo3-starter:v1.0.0
 ```
 
 ### Rollback in Coolify
 
 1. Gehe zu deiner App in Coolify
-2. Ändere **Image** zu: `ghcr.io/alandolsi/landolsi-starter:v1.0.0`
+2. Ändere **Image** zu: `ghcr.io/alandolsi/typo3-starter:v1.0.0`
 3. Oder wähle einen älteren **Git Tag** unter Branch/Tag
 
 ## Deployment (Coolify)
