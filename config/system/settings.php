@@ -2,7 +2,7 @@
 return [
     'BE' => [
         'debug' => false,
-        'installToolPassword' => '$argon2i$v=19$m=65536,t=16,p=1$dzg2bFZrQUlYLkg0MHFHQw$H/eSHKi19gqMIUPrmnxM5QkA+z5Cy41gmWOhDA7iG6o',
+        'installToolPassword' => '$argon2i$v=19$m=65536,t=16,p=1$MlREMnZxOEVIMnlzS0lsQQ$P/dSM6a9IeLFa1mnGw8wVdUrOKvl1PjWA6JJAk+YWwk',
         'passwordHashing' => [
             'className' => 'TYPO3\\CMS\\Core\\Crypto\\PasswordHashing\\Argon2iPasswordHash',
             'options' => [],
@@ -11,20 +11,29 @@ return [
     'DB' => [
         'Connections' => [
             'Default' => [
-                'charset' => 'utf8',
+                'charset' => 'utf8mb4',
+                'dbname' => 'db',
+                'defaultTableOptions' => [
+                    'charset' => 'utf8mb4',
+                    'collation' => 'utf8mb4_unicode_ci',
+                ],
                 'driver' => 'mysqli',
+                'host' => 'db',
+                'password' => 'db',
+                'port' => 3306,
+                'user' => 'db',
             ],
         ],
     ],
     'EXTENSIONS' => [
         'backend' => [
-            'backendFavicon' => 'fileadmin/Logos/TYPO3_Cloud_Starter.svg',
-            'backendLogo' => 'fileadmin/Logos/TYPO3_Cloud_Starter.svg',
+            'backendFavicon' => '',
+            'backendLogo' => '',
             'loginBackgroundImage' => '',
-            'loginFootnote' => 'TYPO3 Cloud Starter',
-            'loginHighlightColor' => '#ff8700',
-            'loginLogo' => 'fileadmin/Logos/TYPO3_Cloud_Starter.svg',
-            'loginLogoAlt' => 'TYPO3 Cloud Starter',
+            'loginFootnote' => '',
+            'loginHighlightColor' => '',
+            'loginLogo' => '',
+            'loginLogoAlt' => '',
         ],
         'extensionmanager' => [
             'automaticInstallation' => '1',
@@ -73,7 +82,6 @@ return [
     ],
     'SYS' => [
         'UTF8filesystem' => true,
-        'systemLocale' => 'de_DE.UTF-8',
         'caching' => [
             'cacheConfigurations' => [
                 'hash' => [
@@ -95,14 +103,14 @@ return [
         ],
         'devIPmask' => '',
         'displayErrors' => 0,
-        'encryptionKey' => '963eb6ab066b2e748ad70e9becba62e025049575359c168a9e14409b883f44006fc2058a34b97f285b369f20661047f3',
+        'encryptionKey' => 'e6610cd32f61c2e62ecb88aa46614913eae76074e3cb139143d935c777ec891f68fa920cf3ea396b1a2229f41a739281',
         'exceptionalErrors' => 4096,
         'features' => [
             'extbase.consistentDateTimeHandling' => true,
             'frontend.cache.autoTagging' => true,
             'security.system.enforceAllowedFileExtensions' => true,
         ],
-        'sitename' => 'TYPO3 Cloud Starter',
+        'sitename' => 'TYPO3 13 Starter',
         'systemMaintainers' => [
             1,
         ],

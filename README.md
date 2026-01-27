@@ -41,8 +41,14 @@ Ein "Cloud-Ready" TYPO3 v13 Boilerplate für Deployment via Coolify.
 git clone https://github.com/alandolsi/typo3-starter.git
 cd typo3-starter
 
+# Abhängigkeiten installieren
+ddev composer install
+
 # Projekt starten
 ddev start
+
+# TYPO3 Setup starten (erstes Mal)
+ddev exec ./vendor/bin/typo3 setup
 
 # Browser öffnen
 ddev launch
