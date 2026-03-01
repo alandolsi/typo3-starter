@@ -63,12 +63,13 @@ RUN mkdir -p var/cache var/lock var/log var/session var/labels \
     && chmod -R 775 /var/www/html/public/typo3temp \
     && chmod -R 775 /var/www/html/public/fileadmin
 
+# 9. Entrypoint: Rechte zur Laufzeit setzen (wichtig bei Volume-Mounts)
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 # Marker für additional.php setzen
 ENV IS_DOCKER_ENV=true
 
-RUN mkdir -p /var/www/html/var/log /var/www/html/var/cache /var/www/html/var/lock /var/www/html/public/typo3temp \
-    && chown -R www-data:www-data /var/www/html/var /var/www/html/public/fileadmin /var/www/html/public/typo3temp \
-    && chmod -R ug+rwX /var/www/html/var /var/www/html/public/fileadmin /var/www/html/public/typo3temp
-
 EXPOSE 80
 
+ENTRYPOINT ["entrypoint.sh"]
