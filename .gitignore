@@ -30,3 +30,7 @@ nbproject
 
 # TYPO3 generated assets
 /public/_assets/
+/public/_assets_install/
+
+# DDEV generated traefik certs/config
+.ddev/traefik/
