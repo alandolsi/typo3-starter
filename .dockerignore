@@ -1,0 +1,34 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# DDEV local development
+.ddev
+
+# TYPO3 runtime directories (werden zur Laufzeit generiert)
+var/
+public/typo3temp/
+public/fileadmin/
+public/_assets/
+public/_assets_install/
+
+# Composer (wird im Docker Build neu installiert)
+vendor/
+
+# Development tools
+.php-cs-fixer.cache
+phpstan.neon
+phpunit.xml
+.editorconfig
+
+# CI/CD
+.github/
+
+# Docs
+README.md
+*.md
+
+# OS files
+.DS_Store
+Thumbs.db
