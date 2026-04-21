@@ -3,13 +3,13 @@
 [![CI](https://github.com/alandolsi/typo3-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/alandolsi/typo3-starter/actions/workflows/ci.yml)
 [![Release](https://github.com/alandolsi/typo3-starter/actions/workflows/release.yml/badge.svg)](https://github.com/alandolsi/typo3-starter/actions/workflows/release.yml)
 
-Ein **Cloud-Ready TYPO3 v13 Boilerplate** für modernes Deployment via [Coolify](https://coolify.io). Folgt dem 12-Factor App Ansatz — keine Passwörter im Code, konfiguriert über Environment Variables.
+Ein **Cloud-Ready TYPO3 v14 Boilerplate** für modernes Deployment via [Coolify](https://coolify.io). Folgt dem 12-Factor App Ansatz — keine Passwörter im Code, konfiguriert über Environment Variables.
 
 ## Tech Stack
 
 | | |
 |---|---|
-| **CMS** | TYPO3 v13 LTS |
+| **CMS** | TYPO3 v14 LTS |
 | **PHP** | 8.3 |
 | **Webserver** | Apache |
 | **Datenbank** | MariaDB 10.11 |

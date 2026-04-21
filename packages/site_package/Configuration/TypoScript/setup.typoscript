@@ -11,7 +11,7 @@ page {
         viewport = width=device-width, initial-scale=1
         robots = index,follow
         author = TYPO3 Cloud Starter
-        description = Eine moderne TYPO3 v13 Installation mit Cloud-Ready Architektur
+        description = Eine moderne TYPO3 v14 Installation mit Cloud-Ready Architektur
     }
 
     # Haupt-Content: Willkommensseite mit Logo
