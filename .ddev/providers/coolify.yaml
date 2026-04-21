@@ -1,62 +1,135 @@
 #
 # DDEV Provider: Coolify Production
 # ==================================
-# Synchronisiert Datenbank und Fileadmin von Production zu DDEV
 #
-# Verwendung:
-#   ddev pull coolify
+# Pull:  ddev pull coolify          → Production DB + fileadmin → lokal
+# Push:  ddev push coolify          → Lokal DB + fileadmin → Production ⚠️
 #
-# Voraussetzungen:
-#   1. SSH-Zugang zum Coolify-Server konfigurieren
-#   2. Environment-Variablen in .ddev/.env.coolify setzen:
-#      - COOLIFY_SSH_HOST=dein-server.de
-#      - COOLIFY_SSH_USER=root
-#      - COOLIFY_SSH_PORT=22
-#      - COOLIFY_CONTAINER_NAME=lk8s4cooc4skw4o8k044gokw
-#      - COOLIFY_DB_CONTAINER=tg0wgc480k0gss84o84g8wcg
+# Voraussetzung: SSH-Key für root@kundenland.de muss im SSH-Agent sein
+#   → ddev auth ssh
 #
+# Container werden automatisch per Coolify-Label gefunden (funktioniert auch
+# nach Re-Deploys mit neuen Container-Namen).
+# Das DB-Passwort wird zur Laufzeit aus dem Container geholt — kein Hardcoding.
 
 environment_variables:
-  COOLIFY_SSH_HOST: ""
-  COOLIFY_SSH_USER: "root"
-  COOLIFY_SSH_PORT: "22"
-  COOLIFY_CONTAINER_NAME: ""
-  COOLIFY_DB_CONTAINER: ""
+  COOLIFY_SSH: "root@kundenland.de"
+  COOLIFY_APP_LABEL: "coolify.resourceName=alandolsitypo3-startermain"
+  COOLIFY_DB_LABEL: "coolify.resourceName=t3-starter-mariadb-database"
   COOLIFY_DB_NAME: "default"
   COOLIFY_DB_USER: "mariadb"
-  COOLIFY_DB_PASSWORD: ""
 
 auth_command:
   command: |
     set -eu -o pipefail
-    if [ -z "${COOLIFY_SSH_HOST:-}" ]; then
-      echo "❌ COOLIFY_SSH_HOST nicht gesetzt!"
-      echo "Erstelle .ddev/.env.coolify mit den Zugangsdaten."
+    ssh -o StrictHostKeyChecking=accept-new -o ConnectTimeout=10 \
+      ${COOLIFY_SSH} "echo '✅ SSH-Verbindung zu ${COOLIFY_SSH} OK'" || {
+      echo ""
+      echo "❌ SSH-Verbindung fehlgeschlagen!"
+      echo "   Führe zuerst 'ddev auth ssh' aus um deinen SSH-Key hinzuzufügen."
       exit 1
-    fi
-    ssh -p ${COOLIFY_SSH_PORT} ${COOLIFY_SSH_USER}@${COOLIFY_SSH_HOST} "echo '✅ SSH-Verbindung erfolgreich'"
+    }
 
 db_pull_command:
   command: |
     set -eu -o pipefail
-    echo "📦 Exportiere Datenbank von Production..."
-    
-    # Dump auf dem Server erstellen
-    ssh -p ${COOLIFY_SSH_PORT} ${COOLIFY_SSH_USER}@${COOLIFY_SSH_HOST} \
-      "docker exec ${COOLIFY_DB_CONTAINER} mysqldump -u ${COOLIFY_DB_USER} -p'${COOLIFY_DB_PASSWORD}' ${COOLIFY_DB_NAME}" \
-      > /var/www/html/.ddev/.downloads/db.sql
-    
-    echo "✅ Datenbank-Dump erstellt: .ddev/.downloads/db.sql"
+    mkdir -p /var/www/html/.ddev/.downloads
+
+    # Container per Coolify-Label finden (stabil über Re-Deploys hinweg)
+    APP=$(ssh -o StrictHostKeyChecking=accept-new ${COOLIFY_SSH} \
+      "docker ps -qf 'label=${COOLIFY_APP_LABEL}'")
+    DB=$(ssh ${COOLIFY_SSH} \
+      "docker ps -qf 'label=${COOLIFY_DB_LABEL}'")
+
+    [ -z "$APP" ] && { echo "❌ TYPO3 App-Container nicht gefunden!"; exit 1; }
+    [ -z "$DB"  ] && { echo "❌ MariaDB-Container nicht gefunden!";   exit 1; }
+
+    echo "🔍 App-Container : $APP"
+    echo "🗄️  DB-Container  : $DB"
+
+    # DB-Passwort dynamisch aus Container-Environment holen (via docker exec env, kein Go-Template)
+    DB_PASS=$(ssh ${COOLIFY_SSH} \
+      "docker exec $APP env" \
+      | grep '^TYPO3_DB_PASSWORD=' | cut -d= -f2-)
+
+    [ -z "$DB_PASS" ] && { echo "❌ DB-Passwort nicht gefunden!"; exit 1; }
+
+    echo "📤 Exportiere Production-Datenbank..."
+    ssh ${COOLIFY_SSH} \
+      "docker exec -e MYSQL_PWD='$DB_PASS' $DB \
+        sh -c 'mariadb-dump -u${COOLIFY_DB_USER} ${COOLIFY_DB_NAME} 2>/dev/null || mysqldump -u${COOLIFY_DB_USER} ${COOLIFY_DB_NAME} 2>/dev/null'" \
+      | gzip > /var/www/html/.ddev/.downloads/db.sql.gz
+
+    echo "✅ DB-Dump gespeichert: .ddev/.downloads/db.sql.gz"
 
 files_pull_command:
   command: |
     set -eu -o pipefail
-    echo "📁 Synchronisiere fileadmin von Production..."
-    
-    # Fileadmin vom Server holen
-    rsync -avz --delete \
-      -e "ssh -p ${COOLIFY_SSH_PORT}" \
-      ${COOLIFY_SSH_USER}@${COOLIFY_SSH_HOST}:/var/lib/docker/volumes/*${COOLIFY_CONTAINER_NAME}*/_data/public/fileadmin/ \
-      /var/www/html/public/fileadmin/
-    
-    echo "✅ Fileadmin synchronisiert"
+    mkdir -p /var/www/html/.ddev/.downloads/files
+
+    APP=$(ssh -o StrictHostKeyChecking=accept-new ${COOLIFY_SSH} \
+      "docker ps -qf 'label=${COOLIFY_APP_LABEL}'")
+
+    [ -z "$APP" ] && { echo "❌ TYPO3 App-Container nicht gefunden!"; exit 1; }
+
+    echo "📁 Lade fileadmin von Production (Container: $APP)..."
+    # Inhalte von fileadmin/ (ohne den Ordner selbst) → .downloads/files/
+    ssh ${COOLIFY_SSH} \
+      "docker exec $APP tar czf - -C /var/www/html/public/fileadmin . 2>/dev/null" \
+      | tar xzf - -C /var/www/html/.ddev/.downloads/files/
+
+    echo "✅ fileadmin heruntergeladen nach .ddev/.downloads/files/"
+
+db_push_command:
+  command: |
+    set -eu -o pipefail
+    echo ""
+    echo "╔══════════════════════════════════════════════════╗"
+    echo "║  ⚠️  ACHTUNG: Überschreibt PRODUCTION-Datenbank! ║"
+    echo "╚══════════════════════════════════════════════════╝"
+    echo "   CTRL+C zum Abbrechen – weiter in 10 Sekunden..."
+    sleep 10
+
+    APP=$(ssh -o StrictHostKeyChecking=accept-new ${COOLIFY_SSH} \
+      "docker ps -qf 'label=${COOLIFY_APP_LABEL}'")
+    DB=$(ssh ${COOLIFY_SSH} \
+      "docker ps -qf 'label=${COOLIFY_DB_LABEL}'")
+    DB_PASS=$(ssh ${COOLIFY_SSH} \
+      "docker exec $APP env" \
+      | grep '^TYPO3_DB_PASSWORD=' | cut -d= -f2-)
+
+    [ -z "$DB_PASS" ] && { echo "❌ DB-Passwort nicht gefunden!"; exit 1; }
+
+    echo "📤 Exportiere lokale Datenbank..."
+    mysqldump -h db -u db -pdb db 2>/dev/null \
+      | gzip > /var/www/html/.ddev/.downloads/db_push.sql.gz
+
+    echo "📥 Importiere in Production-Datenbank..."
+    gunzip -c /var/www/html/.ddev/.downloads/db_push.sql.gz \
+      | ssh ${COOLIFY_SSH} \
+          "docker exec -i -e MYSQL_PWD='$DB_PASS' $DB \
+            sh -c 'mariadb -u${COOLIFY_DB_USER} ${COOLIFY_DB_NAME} 2>/dev/null || mysql -u${COOLIFY_DB_USER} ${COOLIFY_DB_NAME}'"
+
+    echo "✅ Production-Datenbank aktualisiert"
+
+files_push_command:
+  command: |
+    set -eu -o pipefail
+    echo ""
+    echo "╔══════════════════════════════════════════════════╗"
+    echo "║  ⚠️  ACHTUNG: Überschreibt fileadmin auf PROD!   ║"
+    echo "╚══════════════════════════════════════════════════╝"
+    echo "   CTRL+C zum Abbrechen – weiter in 10 Sekunden..."
+    sleep 10
+
+    APP=$(ssh -o StrictHostKeyChecking=accept-new ${COOLIFY_SSH} \
+      "docker ps -qf 'label=${COOLIFY_APP_LABEL}'")
+
+    [ -z "$APP" ] && { echo "❌ TYPO3 App-Container nicht gefunden!"; exit 1; }
+
+    echo "📤 Übertrage fileadmin zu Production (Container: $APP)..."
+    tar czf - -C /var/www/html/public/fileadmin . \
+      | ssh ${COOLIFY_SSH} \
+          "docker exec -i $APP tar xzf - -C /var/www/html/public/fileadmin/"
+
+    echo "✅ fileadmin auf Production aktualisiert"
