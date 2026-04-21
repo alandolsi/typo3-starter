@@ -2,7 +2,6 @@
 return [
     'BE' => [
         'debug' => false,
-        'installToolPassword' => '$argon2i$v=19$m=65536,t=16,p=1$MlREMnZxOEVIMnlzS0lsQQ$P/dSM6a9IeLFa1mnGw8wVdUrOKvl1PjWA6JJAk+YWwk',
         'passwordHashing' => [
             'className' => 'TYPO3\\CMS\\Core\\Crypto\\PasswordHashing\\Argon2iPasswordHash',
             'options' => [],
@@ -12,16 +11,11 @@ return [
         'Connections' => [
             'Default' => [
                 'charset' => 'utf8mb4',
-                'dbname' => 'db',
                 'defaultTableOptions' => [
                     'charset' => 'utf8mb4',
                     'collation' => 'utf8mb4_unicode_ci',
                 ],
                 'driver' => 'mysqli',
-                'host' => 'db',
-                'password' => 'db',
-                'port' => 3306,
-                'user' => 'db',
             ],
         ],
     ],
@@ -103,16 +97,16 @@ return [
         ],
         'devIPmask' => '',
         'displayErrors' => 0,
-        'encryptionKey' => 'e6610cd32f61c2e62ecb88aa46614913eae76074e3cb139143d935c777ec891f68fa920cf3ea396b1a2229f41a739281',
+        'encryptionKey' => '1e2ef8c880305c341b9fba1a4f389f8d6107bb5959f822f4e3ebf9b4ba561522b641fd8db7bcb439bc2d6a4aa0e6cbe2',
         'exceptionalErrors' => 4096,
         'features' => [
             'extbase.consistentDateTimeHandling' => true,
             'frontend.cache.autoTagging' => true,
             'security.system.enforceAllowedFileExtensions' => true,
         ],
-        'sitename' => 'TYPO3 13 Starter',
+        'sitename' => 'New TYPO3 site',
         'systemMaintainers' => [
-            1,
+            2,
         ],
     ],
 ];

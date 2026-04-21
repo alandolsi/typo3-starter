@@ -2,11 +2,14 @@ name: TYPO3 Code Review
 
 on:
   pull_request:
-  push:
+    branches: [main, develop]
 
 jobs:
   review:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
       - uses: alandolsi/typo3-code-review-action@main

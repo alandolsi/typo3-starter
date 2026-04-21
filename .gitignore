@@ -24,3 +24,9 @@ nbproject
 
 # Private Copilot instructions
 .github/copilot-instructions.md
+
+# Tool caches
+.php-cs-fixer.cache
+
+# TYPO3 generated assets
+/public/_assets/
